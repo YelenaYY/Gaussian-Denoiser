@@ -11,3 +11,6 @@ wheels/
 .ipynb_checkpoints/
 BSD300.tgz
 data/
+KAIR/
+DnCNN/
+checkpoints/
