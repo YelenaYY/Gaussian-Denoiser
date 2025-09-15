@@ -9,7 +9,8 @@ wheels/
 # Virtual environments
 .venv
 .ipynb_checkpoints/
-data/
+data/train/
+data/test/
 KAIR/
 DnCNNC/
 checkpoints/
