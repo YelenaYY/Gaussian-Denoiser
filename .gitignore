@@ -9,8 +9,10 @@ wheels/
 # Virtual environments
 .venv
 .ipynb_checkpoints/
-BSD300.tgz
 data/
 KAIR/
-DnCNN/
+DnCNNC/
 checkpoints/
+results/
+logs/
+models
