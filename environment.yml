@@ -1,0 +1,25 @@
+name: gaussian-denoiser
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+
+dependencies:
+  # Python
+  - python=3.12
+
+  # Core ML/DL frameworks
+  - pytorch>=1.12.0
+  - torchvision>=0.13.0
+
+  # Image processing (required by your code)
+  - pillow>=8.0.0
+
+  # Scientific computing (required by your code)  
+  - numpy>=1.21.0
+
+  # Visualization (for displaying results)
+  - matplotlib>=3.5.0
+
+# To create the environment: conda env create -f environment.yml
+# To activate: conda activate gaussian-denoiser
