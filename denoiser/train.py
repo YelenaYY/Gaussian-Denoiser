@@ -1,11 +1,11 @@
 from denoiser.dataset import (
     PatchDataset,
-    deafult_transform,
+    DEFAULT_TRANSFORM,
     MODEL_S_NOISE_TRANSFORM,
     MODEL_B_NOISE_TRANSFORM,
     MODEL_3_NOISE_TRANSFORM,
 )
-from denoiser.model import DnCNN, load_checkpoint, save_checkpoint
+from denoiser.model import DnCNN, load_latest_checkpoint, save_checkpoint
 from denoiser.utils import Logger
 
 import torch
@@ -27,6 +27,7 @@ def train(options: dict):
     max_epoch = options["max_epoch"] if "max_epoch" in options else 100
     log_dir = options["log_dir"] if "log_dir" in options else "logs"
     batch_size = options["batch_size"] if "batch_size" in options else 128
+    checkpoint = options["checkpoint"] if "checkpoint" in options else None
 
     model_type = options["model_type"]
     if model_type == "s":
@@ -40,6 +41,12 @@ def train(options: dict):
         patch_size = 50
         stride = 11
         noise_transform = MODEL_B_NOISE_TRANSFORM
+        image_channels = 3
+        num_layers = 20
+    elif model_type == "3":
+        patch_size = 50
+        stride = 5
+        noise_transform = MODEL_3_NOISE_TRANSFORM
         image_channels = 3
         num_layers = 20
     else:
@@ -61,7 +68,13 @@ def train(options: dict):
         num_layers=num_layers,
         image_channels=image_channels,
     )
-    load_checkpoint(model, model_dir)
+    if checkpoint:
+        if Path(checkpoint).exists():
+            model.load_state_dict(torch.load(checkpoint))
+        else:
+            raise FileNotFoundError(f"Checkpoint {checkpoint} not found")
+    else:
+        load_latest_checkpoint(model, model_dir)
 
     model.train()
     if use_cuda:
@@ -78,7 +91,7 @@ def train(options: dict):
 
         training_dataset = PatchDataset(
             train_data,
-            transform=deafult_transform,
+            transform=DEFAULT_TRANSFORM,
             patch_size=patch_size,
             stride=stride,
             batch_size=128,

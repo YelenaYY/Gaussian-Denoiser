@@ -73,7 +73,7 @@ def save_checkpoint(model, epoch, model_dir: Path):
         torch.save(model.state_dict(), model_path)
 
 
-def load_checkpoint(model, model_dir):
+def load_latest_checkpoint(model, model_dir):
     print(f"Try load checkpoints from {model_dir}")
     checkpoints = list(model_dir.glob("model_*.pth"))
     n_checkpoints = len(checkpoints)

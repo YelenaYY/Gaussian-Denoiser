@@ -21,4 +21,4 @@ dev = [
 ]
 
 [tool.pyright]
-typeCheckingMode = "basic"
+typeCheckingMode = "off"

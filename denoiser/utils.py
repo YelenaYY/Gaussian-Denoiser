@@ -61,6 +61,8 @@ def load_images(data_dirs: str | list[str]) -> list[Path]:
 TO_TENSOR = v2.ToImage()
 
 
-def decode_any_image(image_path: Path):
+def decode_any_image(image_path: Path, force_rgb: bool = False):
     image = Image.open(image_path)
+    if force_rgb:
+        image = image.convert("RGB")
     return TO_TENSOR(image)
