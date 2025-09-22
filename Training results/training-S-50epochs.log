@@ -1,0 +1,58 @@
+# log for DnCNN-S - 50 epochs
+
+Loading training files from: data/Train400
+Found 400 training files
+Created dataset with 204800 samples (DnCNN-S: 204,800 patches)
+Using device: cuda
+Starting training...
+Epoch 001/50 | LR 1.00e-01 | MSE 0.013369 | PSNR_in 20.17 | PSNR_out 22.54 | Batches: 1600
+Epoch 002/50 | LR 8.69e-02 | MSE 0.003223 | PSNR_in 20.17 | PSNR_out 24.93 | Batches: 1600
+Epoch 003/50 | LR 7.54e-02 | MSE 0.002691 | PSNR_in 20.17 | PSNR_out 25.71 | Batches: 1600
+Epoch 004/50 | LR 6.55e-02 | MSE 0.002413 | PSNR_in 20.17 | PSNR_out 26.18 | Batches: 1600
+Epoch 005/50 | LR 5.69e-02 | MSE 0.002263 | PSNR_in 20.17 | PSNR_out 26.46 | Batches: 1600
+Epoch 006/50 | LR 4.94e-02 | MSE 0.002174 | PSNR_in 20.17 | PSNR_out 26.63 | Batches: 1600
+Epoch 007/50 | LR 4.29e-02 | MSE 0.002120 | PSNR_in 20.17 | PSNR_out 26.74 | Batches: 1600
+Epoch 008/50 | LR 3.73e-02 | MSE 0.002081 | PSNR_in 20.17 | PSNR_out 26.82 | Batches: 1600
+Epoch 009/50 | LR 3.24e-02 | MSE 0.002045 | PSNR_in 20.17 | PSNR_out 26.90 | Batches: 1600
+Epoch 010/50 | LR 2.81e-02 | MSE 0.002021 | PSNR_in 20.17 | PSNR_out 26.95 | Batches: 1600
+Epoch 011/50 | LR 2.44e-02 | MSE 0.002001 | PSNR_in 20.17 | PSNR_out 26.99 | Batches: 1600
+Epoch 012/50 | LR 2.12e-02 | MSE 0.001986 | PSNR_in 20.17 | PSNR_out 27.03 | Batches: 1600
+Epoch 013/50 | LR 1.84e-02 | MSE 0.001974 | PSNR_in 20.17 | PSNR_out 27.05 | Batches: 1600
+Epoch 014/50 | LR 1.60e-02 | MSE 0.001961 | PSNR_in 20.17 | PSNR_out 27.08 | Batches: 1600
+Epoch 015/50 | LR 1.39e-02 | MSE 0.001950 | PSNR_in 20.17 | PSNR_out 27.11 | Batches: 1600
+Epoch 016/50 | LR 1.21e-02 | MSE 0.001947 | PSNR_in 20.17 | PSNR_out 27.11 | Batches: 1600
+Epoch 017/50 | LR 1.05e-02 | MSE 0.001937 | PSNR_in 20.17 | PSNR_out 27.13 | Batches: 1600
+Epoch 018/50 | LR 9.10e-03 | MSE 0.001935 | PSNR_in 20.17 | PSNR_out 27.14 | Batches: 1600
+Epoch 019/50 | LR 7.91e-03 | MSE 0.001924 | PSNR_in 20.17 | PSNR_out 27.16 | Batches: 1600
+Epoch 020/50 | LR 6.87e-03 | MSE 0.001932 | PSNR_in 20.17 | PSNR_out 27.15 | Batches: 1600
+Epoch 021/50 | LR 5.96e-03 | MSE 0.001924 | PSNR_in 20.17 | PSNR_out 27.16 | Batches: 1600
+Epoch 022/50 | LR 5.18e-03 | MSE 0.001915 | PSNR_in 20.17 | PSNR_out 27.18 | Batches: 1600
+Epoch 023/50 | LR 4.50e-03 | MSE 0.001913 | PSNR_in 20.17 | PSNR_out 27.19 | Batches: 1600
+Epoch 024/50 | LR 3.91e-03 | MSE 0.001913 | PSNR_in 20.17 | PSNR_out 27.19 | Batches: 1600
+Epoch 025/50 | LR 3.39e-03 | MSE 0.001911 | PSNR_in 20.17 | PSNR_out 27.19 | Batches: 1600
+Epoch 026/50 | LR 2.95e-03 | MSE 0.001903 | PSNR_in 20.17 | PSNR_out 27.21 | Batches: 1600
+Epoch 027/50 | LR 2.56e-03 | MSE 0.001908 | PSNR_in 20.17 | PSNR_out 27.20 | Batches: 1600
+Epoch 028/50 | LR 2.22e-03 | MSE 0.001901 | PSNR_in 20.17 | PSNR_out 27.22 | Batches: 1600
+Epoch 029/50 | LR 1.93e-03 | MSE 0.001904 | PSNR_in 20.17 | PSNR_out 27.21 | Batches: 1600
+Epoch 030/50 | LR 1.68e-03 | MSE 0.001906 | PSNR_in 20.17 | PSNR_out 27.21 | Batches: 1600
+Epoch 031/50 | LR 1.46e-03 | MSE 0.001898 | PSNR_in 20.17 | PSNR_out 27.22 | Batches: 1600
+Epoch 032/50 | LR 1.26e-03 | MSE 0.001903 | PSNR_in 20.17 | PSNR_out 27.21 | Batches: 1600
+Epoch 033/50 | LR 1.10e-03 | MSE 0.001896 | PSNR_in 20.17 | PSNR_out 27.23 | Batches: 1600
+Epoch 034/50 | LR 9.54e-04 | MSE 0.001898 | PSNR_in 20.17 | PSNR_out 27.22 | Batches: 1600
+Epoch 035/50 | LR 8.29e-04 | MSE 0.001903 | PSNR_in 20.17 | PSNR_out 27.21 | Batches: 1600
+Epoch 036/50 | LR 7.20e-04 | MSE 0.001893 | PSNR_in 20.17 | PSNR_out 27.23 | Batches: 1600
+Epoch 037/50 | LR 6.25e-04 | MSE 0.001900 | PSNR_in 20.17 | PSNR_out 27.22 | Batches: 1600
+Epoch 038/50 | LR 5.43e-04 | MSE 0.001897 | PSNR_in 20.17 | PSNR_out 27.23 | Batches: 1600
+Epoch 039/50 | LR 4.71e-04 | MSE 0.001894 | PSNR_in 20.17 | PSNR_out 27.23 | Batches: 1600
+Epoch 040/50 | LR 4.09e-04 | MSE 0.001902 | PSNR_in 20.17 | PSNR_out 27.22 | Batches: 1600
+Epoch 041/50 | LR 3.56e-04 | MSE 0.001900 | PSNR_in 20.17 | PSNR_out 27.22 | Batches: 1600
+Epoch 042/50 | LR 3.09e-04 | MSE 0.001899 | PSNR_in 20.17 | PSNR_out 27.22 | Batches: 1600
+Epoch 043/50 | LR 2.68e-04 | MSE 0.001895 | PSNR_in 20.17 | PSNR_out 27.23 | Batches: 1600
+Epoch 044/50 | LR 2.33e-04 | MSE 0.001899 | PSNR_in 20.17 | PSNR_out 27.22 | Batches: 1600
+Epoch 045/50 | LR 2.02e-04 | MSE 0.001900 | PSNR_in 20.17 | PSNR_out 27.22 | Batches: 1600
+Epoch 046/50 | LR 1.76e-04 | MSE 0.001897 | PSNR_in 20.17 | PSNR_out 27.23 | Batches: 1600
+Epoch 047/50 | LR 1.53e-04 | MSE 0.001895 | PSNR_in 20.17 | PSNR_out 27.23 | Batches: 1600
+Epoch 048/50 | LR 1.33e-04 | MSE 0.001894 | PSNR_in 20.17 | PSNR_out 27.23 | Batches: 1600
+Epoch 049/50 | LR 1.15e-04 | MSE 0.001894 | PSNR_in 20.17 | PSNR_out 27.23 | Batches: 1600
+Epoch 050/50 | LR 1.00e-04 | MSE 0.001897 | PSNR_in 20.17 | PSNR_out 27.23 | Batches: 1600
+Saved: dncnn_S_sigma25.pt
