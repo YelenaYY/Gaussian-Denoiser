@@ -1,5 +1,7 @@
 # train.py - Training loop + CLI
 import argparse
+import os
+import csv
 from dataclasses import dataclass
 import torch
 import torch.nn as nn
@@ -7,7 +9,7 @@ from torch.utils.data import DataLoader
 
 from models import DnCNN
 from datasets import PatchDataset
-from utils import make_filelist
+from utils import make_filelist, psnr
 
 
 @dataclass
@@ -34,6 +36,13 @@ def train_loop(model, loader, cfg: TrainCfg):
     opt = torch.optim.SGD(model.parameters(), lr=cfg.lr_start, momentum=0.9, weight_decay=cfg.weight_decay)
     mse = nn.MSELoss()
 
+    # Prepare logging (CSV in project root)
+    csv_path = os.path.join(".", "metrics.csv")
+    if not os.path.exists(csv_path):
+        with open(csv_path, mode='w', newline='') as f:
+            w = csv.writer(f)
+            w.writerow(["epoch", "lr", "loss", "psnr_in", "psnr_out"])  # header
+
     for ep in range(cfg.epochs):
         # update LR
         for g in opt.param_groups:
@@ -41,6 +50,8 @@ def train_loop(model, loader, cfg: TrainCfg):
 
         running = 0.0
         num_batches = 0
+        running_psnr_in = 0.0
+        running_psnr_out = 0.0
 
         for y, x, v in loader:
             y, x, v = y.to(cfg.device), x.to(cfg.device), v.to(cfg.device)
@@ -58,12 +69,32 @@ def train_loop(model, loader, cfg: TrainCfg):
             running += loss.item() * y.size(0)
             num_batches += 1
 
-        avg_loss = running / (num_batches * cfg.batch_size)
+            # Batch PSNRs (aggregated over batch elements)
+            with torch.no_grad():
+                running_psnr_in += psnr(x, y) * y.size(0)
+                running_psnr_out += psnr(x, x_hat) * y.size(0)
+
+            # Visualization logging removed (no TensorBoard)
+
+        total_samples = num_batches * cfg.batch_size
+        avg_loss = running / total_samples if total_samples > 0 else float('nan')
+        avg_psnr_in = running_psnr_in / total_samples if total_samples > 0 else float('nan')
+        avg_psnr_out = running_psnr_out / total_samples if total_samples > 0 else float('nan')
         print(f"Epoch {ep+1:03d}/{cfg.epochs} | LR {opt.param_groups[0]['lr']:.2e} | "
-            f"MSE {avg_loss:.6f} | Batches: {num_batches}")
+            f"MSE {avg_loss:.6f} | PSNR_in {avg_psnr_in:.2f} | PSNR_out {avg_psnr_out:.2f} | Batches: {num_batches}")
+
+        # No TensorBoard; metrics are printed and appended to CSV
+
+        # Image logging removed (no TensorBoard)
+
+        # CSV logging
+        with open(csv_path, mode='a', newline='') as f:
+            w = csv.writer(f)
+            w.writerow([ep + 1, f"{opt.param_groups[0]['lr']:.8f}", f"{avg_loss:.6f}", f"{avg_psnr_in:.4f}", f"{avg_psnr_out:.4f}"])
 
     torch.save(model.state_dict(), cfg.save_path)
     print(f"Saved: {cfg.save_path}")
+    # No writer to close
 
 
 # ---------- Training ----------
