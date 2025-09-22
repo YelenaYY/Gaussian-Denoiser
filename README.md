@@ -1,6 +1,7 @@
 # Gaussian Denoiser
 
 ## Project Overview
+
 TBA
 
 ## Environment Setup
@@ -20,13 +21,15 @@ make data
 ```
 
 ## Train and test DnCNN-A
+
 Run the following command to train the model A
+
 ```bash
 make train_a 
 ```
+
 then, test the model with Set12 dataset
 
 ```bash
 make test_a
 ```
-

@@ -1,17 +1,11 @@
 .PHONY: data train clean
 
-# Training settings
-MODEL_A_DIR = models/model_a
-LOG_A_DIR = logs/model_a
-
 MAX_EPOCH = 5
 BATCH_SIZE = 128
 
 # Testing settings
-TEST_A_DIR = data/test/Set12 
-MODEL_A_DIR = models/model_a
-OUTPUT_A_DIR = results/model_a
-NOISE_LEVEL_A = 25
+TEST_S_DIR = data/test/Set12
+OUTPUT_S_DIR = results/model_s
 
 # Data settings
 DATA_DIR = data
@@ -21,11 +15,15 @@ COMPRESSED_DIR = $(DATA_DIR)/compressed
 
 
 TRAIN400_DIR = $(TRAIN_DIR)/TRAIN400
+CBSD68_DIR = $(TEST_DIR)/CBSD68
 
+CBSD432_TAR = $(COMPRESSED_DIR)/CBSD432.tar.gz
 BSDS200_ZIP = $(COMPRESSED_DIR)/BSDS200.zip
 T91_ZIP = $(COMPRESSED_DIR)/T91.zip
-TRAIN400_ZIP = $(COMPRESSED_DIR)/TRAIN400.zip
 TEST_ZIP = $(COMPRESSED_DIR)/TEST.zip
+
+TRAIN400_ZIP = $(COMPRESSED_DIR)/TRAIN400.zip
+CBSD68_ZIP = $(COMPRESSED_DIR)/CBSD68.zip
 
 data:
 	mkdir -p $(TEST_DIR)
@@ -37,18 +35,22 @@ data:
 
 	mkdir -p $(TRAIN400_DIR)
 	unzip -o $(TRAIN400_ZIP) -d $(TRAIN400_DIR)
+	unzip -o $(CBSD68_ZIP) -d $(CBSD68_DIR)
+
+	tar -xzvf $(CBSD432_TAR) -C $(TRAIN_DIR)
 
 
-train_a:
-	mkdir -p $(MODEL_A_DIR)
-	mkdir -p $(LOG_A_DIR)
+train_s:
+	uv run main.py --model_type s --train_data $(TRAIN400_DIR) --max_epoch $(MAX_EPOCH) --batch_size $(BATCH_SIZE)
 
-	uv run main.py --data_dir $(TRAIN400_DIR) --model_dir $(MODEL_A_DIR) --log_dir $(LOG_A_DIR) --max_epoch $(MAX_EPOCH) --batch_size $(BATCH_SIZE)
+test_s:
+	uv run main.py --mode test --model_type s --test_data $(TEST_S_DIR)
 
-test_a:
-	mkdir -p $(OUTPUT_A_DIR)
+train_cb:
+	uv run main.py --model_type cb --train_data $(TRAIN_DIR)/CBSD432 --max_epoch $(MAX_EPOCH) --batch_size $(BATCH_SIZE)
 
-	uv run main.py --mode test --test_dir $(TEST_A_DIR) --output_dir $(OUTPUT_A_DIR) --model_dir $(MODEL_A_DIR) --noise_level $(NOISE_LEVEL_A)
+test_cb:
+	uv run main.py --mode test --model_type cb --test_data $(CBSD68_DIR)
 
 clean:
 	rm -rf $(TEST_DIR)
