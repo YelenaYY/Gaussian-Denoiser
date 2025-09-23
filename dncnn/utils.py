@@ -1,3 +1,8 @@
+"""
+Author: Yue (Yelena) Yu,  Rongfei (Eric) JIn
+Date: 2025-09-23
+Class: CS 7180 Advanced Perception
+"""
 # utils.py - Helpers (PSNR, SSIM, file listing, etc.)
 import os
 import math
@@ -25,23 +30,26 @@ def psnr(img1: torch.Tensor, img2: torch.Tensor, max_val: float = 1.0) -> float:
 
 
 def rgb_to_ycbcr(img: torch.Tensor) -> torch.Tensor:
-    # Convert RGB to YCbCr color space.
-    
+    # Convert RGB to YCbCr color space, preserving dtype (e.g., float32).
+
     if img.dim() == 4:  # Batch of images
         img = img.squeeze(0)
-    
-    # Convert to numpy for easier manipulation
-    img_np = img.permute(1, 2, 0).cpu().numpy()
-    
-    # Conversion matrix
-    transform_matrix = np.array([[0.299, 0.587, 0.114],
-                                [-0.168736, -0.331264, 0.5],
-                                [0.5, -0.418688, -0.081312]])
-    
+
+    # Convert to numpy (ensure float32 to avoid float64 downstream)
+    img_np = img.permute(1, 2, 0).cpu().numpy().astype(np.float32, copy=False)
+
+    # Conversion matrix in float32
+    transform_matrix = np.array(
+        [[0.299, 0.587, 0.114],
+         [-0.168736, -0.331264, 0.5],
+         [0.5, -0.418688, -0.081312]],
+        dtype=np.float32,
+    )
+
     ycbcr = img_np @ transform_matrix.T
     ycbcr[:, :, 1:] += 0.5  # Add offset for Cb and Cr channels
-    
-    return torch.from_numpy(ycbcr).permute(2, 0, 1).to(img.device)
+
+    return torch.from_numpy(ycbcr).permute(2, 0, 1).to(device=img.device, dtype=img.dtype)
 
 
 def calculate_psnr_ycbcr(img1: torch.Tensor, img2: torch.Tensor) -> float:

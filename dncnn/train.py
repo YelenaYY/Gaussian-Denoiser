@@ -1,3 +1,8 @@
+"""
+Author: Yue (Yelena) Yu,  Rongfei (Eric) JIn
+Date: 2025-09-23
+Class: CS 7180 Advanced Perception
+"""
 # train.py - Training loop + CLI
 import argparse
 import os
@@ -41,7 +46,7 @@ def train_loop(model, loader, cfg: TrainCfg):
     if not os.path.exists(csv_path):
         with open(csv_path, mode='w', newline='') as f:
             w = csv.writer(f)
-            w.writerow(["epoch", "lr", "loss", "psnr_in", "psnr_out"])  # header
+            w.writerow(["epoch", "lr", "loss", "psnr_in", "psnr_out"]) 
 
     for ep in range(cfg.epochs):
         # update LR
@@ -74,18 +79,12 @@ def train_loop(model, loader, cfg: TrainCfg):
                 running_psnr_in += psnr(x, y) * y.size(0)
                 running_psnr_out += psnr(x, x_hat) * y.size(0)
 
-            # Visualization logging removed (no TensorBoard)
-
         total_samples = num_batches * cfg.batch_size
         avg_loss = running / total_samples if total_samples > 0 else float('nan')
         avg_psnr_in = running_psnr_in / total_samples if total_samples > 0 else float('nan')
         avg_psnr_out = running_psnr_out / total_samples if total_samples > 0 else float('nan')
         print(f"Epoch {ep+1:03d}/{cfg.epochs} | LR {opt.param_groups[0]['lr']:.2e} | "
             f"MSE {avg_loss:.6f} | PSNR_in {avg_psnr_in:.2f} | PSNR_out {avg_psnr_out:.2f} | Batches: {num_batches}")
-
-        # No TensorBoard; metrics are printed and appended to CSV
-
-        # Image logging removed (no TensorBoard)
 
         # CSV logging
         with open(csv_path, mode='a', newline='') as f:

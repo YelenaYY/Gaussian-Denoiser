@@ -1,3 +1,8 @@
+"""
+Author: Yue (Yelena) Yu,  Rongfei (Eric) JIn
+Date: 2025-09-23
+Class: CS 7180 Advanced Perception
+"""
 # datasets.py - Dataset & degradations (Gaussian, SISR, JPEG)
 import math
 import random
