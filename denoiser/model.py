@@ -1,3 +1,7 @@
+# Authors:Rongfei Jin and Yelena Yu,
+# Date: 2025-09-23, 
+# Course: CS 7180 Advanced Perception
+
 import torch
 import torch.nn as nn
 import torch.nn.init as init

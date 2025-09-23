@@ -5,7 +5,7 @@
 missing_files=()
 
 if [ ! -f data/compressed/urban100.zip ]; then
-    echo "urban100.zip not found"
+    echo "urban100.zip not found, download it from gdrive link listed in README.md"
     missing_files+=("urban100.zip")
 fi
 

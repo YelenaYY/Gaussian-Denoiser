@@ -1,3 +1,7 @@
+# Authors:Rongfei Jin and Yelena Yu,
+# Date: 2025-09-23, 
+# Course: CS 7180 Advanced Perception
+
 from typing import Any
 from torch.utils.data import Dataset
 import torch
@@ -46,12 +50,20 @@ class RandomSigmaGaussianNoise:
     def __call__(self, img: torch.Tensor):
         return self.transform(img)
 
+
 class FloatJPEG:
     def __init__(self, quality: tuple[int, int]):
         self.quality = quality
 
     def __call__(self, img: torch.Tensor):
-        return v2.Compose([v2.ToDtype(torch.uint8, scale=True), v2.JPEG(self.quality), v2.ToDtype(torch.float32, scale=True)])(img)
+        return v2.Compose(
+            [
+                v2.ToDtype(torch.uint8, scale=True),
+                v2.JPEG(self.quality),
+                v2.ToDtype(torch.float32, scale=True),
+            ]
+        )(img)
+
 
 MODEL_S_NOISE_TRANSFORM = RandomSigmaGaussianNoise(25.0 / 255.0)
 
@@ -87,7 +99,9 @@ class PatchDataset(Dataset):
 
         # Pre-compute patch indices instead of patches
         self.patch_indices = self._compute_patch_indices()
-        print(f"Computed {batch_size} x {len(self.patch_indices)//batch_size} patch indices")
+        print(
+            f"Computed {batch_size} x {len(self.patch_indices) // batch_size} patch indices"
+        )
 
     def _compute_patch_indices(self):
         patch_indices = []
@@ -155,3 +169,58 @@ DEFAULT_TRANSFORM = v2.RandomChoice(
         ),
     ]
 )
+
+# Old version of dataset extraction, very slow
+# New version is faster and more efficient by computing patches on demand
+
+# def _extract_patches(self, idx):
+#     image_path = self.image_paths[idx]
+
+#     image = decode_image(str(image_path))
+
+#     if self.scale_transform:
+#         image = self.scale_transform(image)
+
+#     patches = []
+
+#     for i in range(0, image.shape[1] - self.patch_size + 1, self.stride):
+#         for j in range(0, image.shape[2] - self.patch_size + 1, self.stride):
+#             patch = image[:, i : i + self.patch_size, j : j + self.patch_size]
+
+#             if self.transform:
+#                 patch = self.transform(patch)
+
+#             patches.append(patch)
+
+#     n_patches_to_remove_for_batch_normalization = len(patches) % self.batch_size
+
+#     patches = patches[:-n_patches_to_remove_for_batch_normalization]
+
+#     patches = torch.stack(patches)
+
+#     if self.normalize:
+#         patches = patches.to(torch.float32) / 255.0
+
+#     return patches
+
+
+# def _read_all_patches(self):
+#     all_patches = []
+
+#     for i in range(len(self.image_paths)):
+#         patches = self._extract_patches(i)
+
+#         all_patches.append(patches)
+
+#     return torch.cat(all_patches)
+
+
+# def __getitem__(self, idx):
+#     patches = self.patches[idx]
+
+#     if isinstance(self.noise_level, tuple):
+#         noise_level = random.uniform(self.noise_level[0], self.noise_level[1])
+
+#         noisy_patches = patches + torch.randn_like(patches) * (noise_level / 255.0)
+
+#     return noisy_patches, patches

@@ -1,8 +1,11 @@
+# Authors:Rongfei Jin and Yelena Yu,
+# Date: 2025-09-23, 
+# Course: CS 7180 Advanced Perception
+
 from denoiser.model import DnCNN, load_latest_checkpoint
 from pathlib import Path
 import torch
 import matplotlib.pyplot as plt
-from torchvision.io import decode_image
 from skimage.metrics import peak_signal_noise_ratio, structural_similarity
 import pandas as pd
 
@@ -51,11 +54,13 @@ def test(options: dict):
     noise_generators = []
     force_rgb = False
     if model_type == "s":
-        noise_generators.append(("sigma25", RandomSigmaGaussianNoise(25 / 255.0)))
+        noise_generators.append(("sigma15", RandomSigmaGaussianNoise((15 / 255.0, 15 / 255.0))))
+        noise_generators.append(("sigma25", RandomSigmaGaussianNoise((25 / 255.0, 25 / 255.0))))
+        noise_generators.append(("sigma50", RandomSigmaGaussianNoise((50 / 255.0, 50 / 255.0))))
     elif model_type == "cb":
-        noise_generators.append(
-            ("sigma0-55", RandomSigmaGaussianNoise((0, 55 / 255.0)))
-        )
+        noise_generators.append(("sigma15", RandomSigmaGaussianNoise((15 / 255.0, 15 / 255.0))))
+        noise_generators.append(("sigma25", RandomSigmaGaussianNoise((25 / 255.0, 25 / 255.0))))
+        noise_generators.append(("sigma50", RandomSigmaGaussianNoise((50 / 255.0, 50 / 255.0))))
     elif model_type == "3":
         noise_generators.append(
             ("sigma15", RandomSigmaGaussianNoise((15 / 255.0, 15 / 255.0)))
@@ -64,7 +69,7 @@ def test(options: dict):
             ("sigma25", RandomSigmaGaussianNoise((25 / 255.0, 25 / 255.0)))
         )
         noise_generators.append(
-            ("sigma55", RandomSigmaGaussianNoise((55 / 255.0, 55 / 255.0)))
+            ("sigma50", RandomSigmaGaussianNoise((50 / 255.0, 50 / 255.0)))
         )
         noise_generators.append(("bicubic2", BicubicDownThenUp([2])))
         noise_generators.append(("bicubic3", BicubicDownThenUp([3])))

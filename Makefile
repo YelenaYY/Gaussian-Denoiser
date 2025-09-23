@@ -1,3 +1,7 @@
+# Authors:Rongfei Jin and Yelena Yu,
+# Date: 2025-09-23, 
+# Course: CS 7180 Advanced Perception
+
 .PHONY: data train clean
 
 MAX_EPOCH = 50
@@ -69,6 +73,9 @@ test_cb:
 
 train_3:
 	uv run main.py --model_type 3 --train_data $(TRAIN_DIR)/T91 $(TRAIN_DIR)/BSDS200 --max_epoch $(MAX_EPOCH) --batch_size $(BATCH_SIZE) --checkpoint $(CHECKPOINT_DIR)/cb/model_050.pth
+
+train_3_resume:
+	uv run main.py --model_type 3 --train_data $(TRAIN_DIR)/T91 $(TRAIN_DIR)/BSDS200 --max_epoch $(MAX_EPOCH) --batch_size $(BATCH_SIZE)
 
 test_3:
 	uv run main.py --mode test --model_type 3 --test_data $(CBSD68_DIR) $(SET14_DIR) $(SET5_DIR) $(CLASSIC5_DIR) $(LIVE5_DIR) $(BSDS100_DIR) $(URBAN100_DIR)
