@@ -18,3 +18,5 @@ results/
 logs/
 models
 data/compressed/urban100.zip
+.DS_Store
+*.pyc
