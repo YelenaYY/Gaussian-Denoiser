@@ -10,6 +10,7 @@ from torchvision.transforms import v2
 from denoiser.utils import decode_any_image, load_images
 
 
+# This is a transformation class that downsamples an image by a random factor and then upsamples it back to the original size
 class BicubicDownThenUp:
     def __init__(self, scale_factors=[2, 3, 4]):
         self.scale_factors = scale_factors
@@ -38,6 +39,8 @@ class BicubicDownThenUp:
         return upsampled
 
 
+# This is a transformation class that adds Gaussian noise to an image with a random sigma, 
+# The sigma needs to scale with the image datatype, e.g. for a sigma 50, the noise passed to GaussianNoise should be 50/255.0
 class RandomSigmaGaussianNoise:
     def __init__(self, noise: tuple[float, float] | float) -> None:
         if isinstance(noise, tuple):
@@ -51,6 +54,7 @@ class RandomSigmaGaussianNoise:
         return self.transform(img)
 
 
+# This is a transformation class that applies JPEG noise to an image with a random quality
 class FloatJPEG:
     def __init__(self, quality: tuple[int, int]):
         self.quality = quality
@@ -64,6 +68,8 @@ class FloatJPEG:
             ]
         )(img)
 
+
+# The following are the noise transforms for the three models
 
 MODEL_S_NOISE_TRANSFORM = RandomSigmaGaussianNoise(25.0 / 255.0)
 
@@ -103,6 +109,7 @@ class PatchDataset(Dataset):
             f"Computed {batch_size} x {len(self.patch_indices) // batch_size} patch indices"
         )
 
+    # This function computes the patch indices for the dataset and allow for on demand patch extraction
     def _compute_patch_indices(self):
         patch_indices = []
         for img_idx, image_path in enumerate(self.image_paths):
@@ -189,18 +196,13 @@ DEFAULT_TRANSFORM = v2.RandomChoice(
 
 #             if self.transform:
 #                 patch = self.transform(patch)
-
 #             patches.append(patch)
 
 #     n_patches_to_remove_for_batch_normalization = len(patches) % self.batch_size
-
 #     patches = patches[:-n_patches_to_remove_for_batch_normalization]
-
 #     patches = torch.stack(patches)
-
 #     if self.normalize:
 #         patches = patches.to(torch.float32) / 255.0
-
 #     return patches
 
 
@@ -209,11 +211,8 @@ DEFAULT_TRANSFORM = v2.RandomChoice(
 
 #     for i in range(len(self.image_paths)):
 #         patches = self._extract_patches(i)
-
 #         all_patches.append(patches)
-
 #     return torch.cat(all_patches)
-
 
 # def __getitem__(self, idx):
 #     patches = self.patches[idx]
