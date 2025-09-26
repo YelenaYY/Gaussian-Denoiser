@@ -5,7 +5,7 @@
 - OS used: macOS, Linux (Arch)
 
 ## Time Travel Days
-- Yes: We will use the travel days
+- Yes: We will use 4 travel days
 
 ## Environment Setup
 
