@@ -68,12 +68,28 @@ def plot_psnr_out_vs_epoch(logs, result_dir: Path):
         ax.set_title("PSNR Out vs Epoch")
     plt.savefig(result_dir / "psnr_out_vs_epoch.png")
 
+def plot_additional_validation(result_dir: Path):
+    plt.style.use('seaborn-v0_8')
+    plt.rcParams['figure.figsize'] = (12, 8)
+    fig, ax = plt.subplots(1, 1, figsize=(7, 6))
+
+    path = result_dir / "additional_validation"
+    for file in path.glob("*.csv"):
+        df = pd.read_csv(file)
+        ax.plot(df["epoch"], df["denoised_psnr"], label=f"Model {file.stem.split('_')[0]}")
+        ax.legend()
+        ax.set_xlabel("Epoch")
+        ax.set_ylabel("PSNR Out (dB)")
+        ax.set_title("PSNR Out vs Epoch on Validation Set")
+    plt.savefig(result_dir / "additional_validation.png")
+
 # This function is used to generate the latex table.
 def generate_latex_table(model_type: str, result_dir: Path):
     model_results_dir = result_dir / model_type
-
+    print(model_results_dir)
     summary = []
     for tests_dir in model_results_dir.glob("*"):
+        print(tests_dir)
         if not tests_dir.is_dir():
             continue
         for average_stats_file in tests_dir.glob("average_stats.csv"):
@@ -104,6 +120,7 @@ def main():
 
     plot_average_loss([s_log, b_log, cb_log, three_log], result_dir)
     plot_psnr_out_vs_epoch([s_log, b_log, cb_log, three_log], result_dir)
+    plot_additional_validation(result_dir)
 
     generate_latex_table("s", result_dir)
     generate_latex_table("b", result_dir)
