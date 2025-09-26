@@ -69,3 +69,6 @@ make train_3
 # Summary file
 make summary
 ```
+
+## Iterative Changelogs
+Please refer to [CHANGELOG.md](CHANGELOG.md)
