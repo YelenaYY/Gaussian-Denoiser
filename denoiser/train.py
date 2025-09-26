@@ -90,7 +90,8 @@ def train(options: dict):
     # Load checkpoint if need to resume training
     if checkpoint:
         if Path(checkpoint).exists():
-            model.load_state_dict(torch.load(checkpoint))
+            device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+            model.load_state_dict(torch.load(checkpoint, map_location=device))
         else:
             raise FileNotFoundError(f"Checkpoint {checkpoint} not found")
     else:

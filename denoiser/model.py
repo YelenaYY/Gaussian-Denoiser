@@ -104,6 +104,8 @@ def load_latest_checkpoint(model, model_dir):
 
     # get the latest checkpoint
     latest_checkpoint = checkpoints[0]
-    model.load_state_dict(torch.load(latest_checkpoint))
+    # Load checkpoint with device mapping to handle CUDA->CPU conversion
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    model.load_state_dict(torch.load(latest_checkpoint, map_location=device))
     print(f"Loaded checkpoint from {latest_checkpoint}")
     return True
