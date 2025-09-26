@@ -19,6 +19,10 @@ This project is Python-based. Use Conda to create the environment defined in `en
    conda activate gaussian-denoiser
    ```
 
+## Dataset - Urban100
+- If use Urban100, Please download from [Google Drive](https://drive.google.com/drive/folders/1B3DJGQKB6eNdwuQIhdskA64qUuVKLZ9u) and place it under `data/compressed`.
+
+
 ## How to Run
 
 ### Training
