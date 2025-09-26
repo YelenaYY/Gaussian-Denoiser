@@ -10,7 +10,8 @@
 MAX_EPOCH = 50
 BATCH_SIZE = 128
 CHECKPOINT_DIR = models
-
+RESULTS_DIR = results
+LOGS_DIR = logs
 # Testing settings
 
 # Data settings
@@ -90,18 +91,23 @@ train_3_resume:
 test_3:
 	uv run main.py --mode test --model_type 3 --test_data $(CBSD68_DIR) $(SET14_DIR) $(SET5_DIR) $(CLASSIC5_DIR) $(LIVE5_DIR) $(BSDS100_DIR) $(URBAN100_DIR)
 
+validation: validation_s validation_b validation_cb validation_3
+
+validation_s:
+	uv run main.py --mode additional_validation --model_type s 
+validation_b:
+	uv run main.py --mode additional_validation --model_type b 
+validation_cb:
+	uv run main.py --mode additional_validation --model_type cb 
+validation_3:
+	uv run main.py --mode additional_validation --model_type 3 
+
 summary:
 	uv run results.py
-
-extra_s:
-	uv run main.py --mode additional_validation --model_type s 
-extra_b:
-	uv run main.py --mode additional_validation --model_type b 
-extra_cb:
-	uv run main.py --mode additional_validation --model_type cb 
-extra_3:
-	uv run main.py --mode additional_validation --model_type 3 
 
 clean:
 	rm -rf $(TEST_DIR)
 	rm -rf $(TRAIN_DIR)
+	rm -rf $(RESULTS_DIR)
+	rm -rf $(LOGS_DIR)
+	rm -rf $(CHECKPOINT_DIR)

@@ -66,7 +66,10 @@ make test_cb
 # Model 3
 make train_3
 
-# Summary file
+# Run extra validation
+make validation
+
+# Make summary tables and plots
 make summary
 ```
 

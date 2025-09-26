@@ -332,7 +332,7 @@ def additional_validation(model_type: str, num_layers: int, image_channels: int,
 
     stats = pd.DataFrame()
 
-    for epoch in range(50, 51):
+    for epoch in range(1, 51):
         model_dir = Path("models") / model_type / f"model_{epoch:03d}.pth"
         if model_dir.exists():
             model = DnCNN(num_layers=num_layers, image_channels=image_channels)
@@ -354,7 +354,6 @@ def additional_validation(model_type: str, num_layers: int, image_channels: int,
                     output_dir,
                     False,
                 )
-                print(noisy_psnr, denoised_psnr, noisy_ssim, denoised_ssim)
                 total_noisy_psnr += noisy_psnr
                 total_denoised_psnr += denoised_psnr
                 total_noisy_ssim += noisy_ssim

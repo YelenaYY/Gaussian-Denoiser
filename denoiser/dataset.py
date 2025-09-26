@@ -62,15 +62,16 @@ class RandomSigmaGaussianNoise:
 
 # This is a transformation class that applies JPEG noise to an image with a random quality
 class FloatJPEG:
-    def __init__(self, quality: list[int]):
+    def __init__(self, quality: tuple[int]):
         self.quality = quality
 
     def __call__(self, img: torch.Tensor):
-        quality = random.choice(self.quality)
+        # quality = random.choice(self.quality)
+        quality = random.uniform(self.quality[0], self.quality[1])
         return v2.Compose(
             [
                 v2.ToDtype(torch.uint8, scale=True),
-                v2.JPEG(quality),
+                v2.JPEG(int(quality)),
                 v2.ToDtype(torch.float32, scale=True),
             ]
         )(img)
@@ -114,7 +115,7 @@ def MODEL_B_NOISE_TRANSFORM():
 def MODEL_3_NOISE_TRANSFORM():
     return v2.RandomChoice(
     [
-        FloatJPEG([10, 20, 30, 40]),
+        FloatJPEG((5, 99)),
         BicubicDownThenUp([2, 3, 4]),
         RandomSigmaGaussianNoise((0, 55.0 / 255.0)),
     ]
