@@ -1,6 +1,10 @@
 # Authors:Rongfei Jin and Yelena Yu,
 # Date: 2025-09-23, 
 # Course: CS 7180 Advanced Perception
+# File Description:
+# This file contains the utilities for the denoiser package.
+# It includes the logger class, which is used to log the training process.
+# It also includes the image loading function.
 
 from pathlib import Path
 from datetime import datetime
@@ -10,9 +14,11 @@ import PIL.Image as Image
 from torchvision.transforms import v2
 
 
+# Define the extensions of the images to load.
 EXTENSIONS = [".png", ".jpg", ".jpeg", ".bmp", ".tiff", ".tif", ".webp"]
 
 
+# This class is used to log the training process.
 class Logger:
     def __init__(self, log_file_path: str | Path, headers: List[str]):
         if isinstance(log_file_path, str):
@@ -26,19 +32,21 @@ class Logger:
 
         self._initialize_log_file()
 
+    # This function is used to initialize the log file.
     def _initialize_log_file(self):
         if not self.log_file_path.exists():
             with open(self.log_file_path, "w") as f:
                 f.write("\t".join(self.headers) + "\n")
         self.file_initialized = True
 
+    # This function is used to log the data to the log file.
     def log(self, data: Dict[str, Any]):
         if not self.file_initialized:
             self._initialize_log_file()
 
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[
             :-3
-        ]  # Include milliseconds
+        ] 
 
         row_data = [timestamp]
 
@@ -50,6 +58,7 @@ class Logger:
             f.write("\t".join(row_data) + "\n")
 
 
+# This function is used to load the images from the data directories.
 def load_images(data_dirs: str | list[str]) -> list[Path]:
     if isinstance(data_dirs, str):
         data_dirs = [data_dirs]
@@ -65,6 +74,7 @@ def load_images(data_dirs: str | list[str]) -> list[Path]:
 TO_TENSOR = v2.ToImage()
 
 
+# This function is used to decode any image to a tensor use PIL.
 def decode_any_image(image_path: Path, force_rgb: bool = False):
     image = Image.open(image_path)
     if force_rgb:

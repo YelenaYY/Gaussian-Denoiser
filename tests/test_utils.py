@@ -1,3 +1,6 @@
+# Unit tests for the dataset
+# Not intended to be evaluated
+
 import unittest
 from pathlib import Path
 from denoiser.utils import Logger

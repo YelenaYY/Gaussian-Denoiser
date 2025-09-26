@@ -1,6 +1,9 @@
 # Authors:Rongfei Jin and Yelena Yu,
 # Date: 2025-09-23, 
 # Course: CS 7180 Advanced Perception
+# File Description:
+# This file contains the main function for the denoiser project.
+# It includes the training and testing functions.
 
 import argparse
 from denoiser.train import train

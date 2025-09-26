@@ -4,8 +4,14 @@
 
 missing_files=()
 
+# check if urban100.zip is downloaded and size is greater than 100MB
 if [ ! -f data/compressed/urban100.zip ]; then
-    echo "urban100.zip not found, download it from gdrive link listed in README.md"
+    echo "urban100.zip not found, try to download"
+    uv run gdown --fuzzy https://drive.google.com/file/d/1UlNulSoyflrEObwu19BBlT7f2_Wxycga/view?usp=sharing -O data/compressed/urban100.zip
+fi
+
+if [ ! -f data/compressed/urban100.zip ]; then
+    echo "urban100.zip still not found, try download from gdrive link listed in README.md"
     missing_files+=("urban100.zip")
 fi
 

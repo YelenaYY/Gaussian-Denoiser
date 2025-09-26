@@ -1,3 +1,6 @@
+# Unit tests for the dataset
+# Not intended to be evaluated
+
 import unittest
 from denoiser.dataset import PatchDataset, BicubicDownThenUp, RandomSigmaGaussianNoise, MODEL_3_NOISE_TRANSFORM
 from torchvision.io import decode_image

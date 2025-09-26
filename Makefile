@@ -1,6 +1,9 @@
 # Authors:Rongfei Jin and Yelena Yu,
 # Date: 2025-09-23, 
 # Course: CS 7180 Advanced Perception
+# File Description:
+# This file contains the Makefile for the denoiser project.
+# It includes the data preparation, training, testing, and summary generation.
 
 .PHONY: data train clean
 
@@ -21,6 +24,7 @@ COMPRESSED_DIR = $(DATA_DIR)/compressed
 TRAIN400_DIR = $(TRAIN_DIR)/TRAIN400
 CBSD68_DIR = $(TEST_DIR)/CBSD68
 SET12_DIR = $(TEST_DIR)/Set12
+BSD68_DIR = $(TEST_DIR)/BSD68
 
 SET14_DIR = $(TEST_DIR)/Set14
 SET5_DIR = $(TEST_DIR)/Set5
@@ -41,7 +45,7 @@ BSDS100_ZIP = $(COMPRESSED_DIR)/BSDS100.zip
 URBAN100_ZIP = $(COMPRESSED_DIR)/urban100.zip
 
 data:
-	bash data.sh
+	bash check_data.sh
 
 	mkdir -p $(TEST_DIR)
 	mkdir -p $(TRAIN_DIR)
@@ -63,7 +67,13 @@ train_s:
 	uv run main.py --model_type s --train_data $(TRAIN400_DIR) --max_epoch $(MAX_EPOCH) --batch_size $(BATCH_SIZE)
 
 test_s:
-	uv run main.py --mode test --model_type s --test_data $(SET12_DIR)
+	uv run main.py --mode test --model_type s --test_data $(SET12_DIR) $(BSD68_DIR)
+
+train_b:
+	uv run main.py --model_type b --train_data $(TRAIN400_DIR) --max_epoch $(MAX_EPOCH) --batch_size $(BATCH_SIZE)
+
+test_b:
+	uv run main.py --mode test --model_type b --test_data $(SET12_DIR) $(BSD68_DIR)
 
 train_cb:
 	uv run main.py --model_type cb --train_data $(TRAIN_DIR)/CBSD432 --max_epoch $(MAX_EPOCH) --batch_size $(BATCH_SIZE)
@@ -79,6 +89,9 @@ train_3_resume:
 
 test_3:
 	uv run main.py --mode test --model_type 3 --test_data $(CBSD68_DIR) $(SET14_DIR) $(SET5_DIR) $(CLASSIC5_DIR) $(LIVE5_DIR) $(BSDS100_DIR) $(URBAN100_DIR)
+
+summary:
+	uv run results.py
 
 clean:
 	rm -rf $(TEST_DIR)

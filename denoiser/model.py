@@ -4,7 +4,6 @@
 
 import torch
 import torch.nn as nn
-import torch.nn.init as init
 from pathlib import Path
 import warnings
 
@@ -50,14 +49,27 @@ class DnCNN(nn.Module):
         self.dncnn = nn.Sequential(*layers)
 
         # Initialize weights
-        for module in self.modules():
-            if isinstance(module, nn.Conv2d):
-                init.orthogonal_(module.weight)
-                if module.bias is not None:
-                    init.constant_(module.bias, 0)
-            elif isinstance(module, nn.BatchNorm2d):
-                init.constant_(module.weight, 1)
-                init.constant_(module.bias, 0)
+
+        # Initialize weights using Kaiming initialization
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                nn.init.kaiming_normal_(m.weight, nonlinearity='relu')
+                if m.bias is not None:
+                    nn.init.zeros_(m.bias)
+            elif isinstance(m, nn.BatchNorm2d):
+                nn.init.ones_(m.weight)
+                nn.init.zeros_(m.bias)
+
+
+
+        # for module in self.modules():
+        #     if isinstance(module, nn.Conv2d):
+        #         init.orthogonal_(module.weight)
+        #         if module.bias is not None:
+        #             init.constant_(module.bias, 0)
+        #     elif isinstance(module, nn.BatchNorm2d):
+        #         init.constant_(module.weight, 1)
+        #         init.constant_(module.bias, 0)
 
     def forward(self, x):
         y = x
