@@ -93,6 +93,15 @@ test_3:
 summary:
 	uv run results.py
 
+extra_s:
+	uv run main.py --mode additional_validation --model_type s 
+extra_b:
+	uv run main.py --mode additional_validation --model_type b 
+extra_cb:
+	uv run main.py --mode additional_validation --model_type cb 
+extra_3:
+	uv run main.py --mode additional_validation --model_type 3 
+
 clean:
 	rm -rf $(TEST_DIR)
 	rm -rf $(TRAIN_DIR)

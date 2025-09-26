@@ -148,7 +148,6 @@ def train(options: dict):
 
             # Update progress bar with current loss
             avg_loss = epoch_loss / (n_count + 1)
-            pbar.set_postfix({"Loss": f"{loss.item():.4f}", "Avg Loss": f"{avg_loss:.4f}"})
 
             with torch.no_grad():
                 batch_size = noisy_patches.size(0)
@@ -160,6 +159,7 @@ def train(options: dict):
                 psnr_in /= batch_size
                 psnr_out /= batch_size
 
+            pbar.set_postfix({"Loss": f"{loss.item():.4f}", "Avg Loss": f"{avg_loss:.4f}", "PSNR In": f"{psnr_in:.4f}", "PSNR Out": f"{psnr_out:.4f}"})
             if n_count % 128 == 0:
                 data = {
                     "epoch": epoch,

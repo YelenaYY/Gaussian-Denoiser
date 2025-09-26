@@ -297,3 +297,74 @@ def test(options: dict):
             noise_generators,
             force_rgb,
         )
+
+def extra(model_type: str):
+    if model_type == "s":
+        num_layers = 17
+        image_channels = 1
+        test_dir = Path("data") / "test" / "BSD68"
+    elif model_type == "b":
+        num_layers = 20
+        image_channels = 1
+        test_dir = Path("data") / "test" / "BSD68"
+    elif model_type == "cb":
+        num_layers = 20
+        image_channels = 3
+        test_dir = Path("data") / "test" / "CBSD68"
+    elif model_type == "3":
+        num_layers = 20
+        image_channels = 3
+        test_dir = Path("data") / "test" / "CBSD68"
+    else:
+        raise ValueError("Invalid model type! must be one of s/b/cb/3")
+    
+    additional_validation(model_type, num_layers, image_channels, test_dir)
+
+def additional_validation(model_type: str, num_layers: int, image_channels: int, test_dir: str):
+    # list model from epoch 1 to 50
+    image_paths = load_images([test_dir])
+    if len(image_paths) == 0:
+        print(f"No images found in {test_dir}")
+        return
+    
+    output_dir = Path("results") / "additional_validation"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    stats = pd.DataFrame()
+
+    for epoch in range(50, 51):
+        model_dir = Path("models") / model_type / f"model_{epoch:03d}.pth"
+        if model_dir.exists():
+            model = DnCNN(num_layers=num_layers, image_channels=image_channels)
+            model.load_state_dict(torch.load(model_dir))
+            model.eval()
+            if torch.cuda.is_available():
+                model = model.cuda()
+
+            total_noisy_psnr = 0
+            total_denoised_psnr = 0
+            total_noisy_ssim = 0
+            total_denoised_ssim = 0
+            for image_path in tqdm(image_paths, desc=f"Processing epoch {epoch} for {model_dir}"):
+                noisy_psnr, denoised_psnr, noisy_ssim, denoised_ssim = process_image(
+                    model,
+                    image_path,
+                    torch.cuda.is_available(),
+                    RandomSigmaGaussianNoise((25 / 255.0, 25 / 255.0)),
+                    output_dir,
+                    False,
+                )
+                print(noisy_psnr, denoised_psnr, noisy_ssim, denoised_ssim)
+                total_noisy_psnr += noisy_psnr
+                total_denoised_psnr += denoised_psnr
+                total_noisy_ssim += noisy_ssim
+                total_denoised_ssim += denoised_ssim
+            stats = pd.concat(
+                [
+                    stats,
+                    pd.DataFrame({"epoch": [epoch], "noisy_psnr": [total_noisy_psnr / len(image_paths)], "denoised_psnr": [total_denoised_psnr / len(image_paths)], "noisy_ssim": [total_noisy_ssim / len(image_paths)], "denoised_ssim": [total_denoised_ssim / len(image_paths)]}),
+                ],
+                ignore_index=True,
+            )
+
+    stats.to_csv(output_dir / f"{model_type}_stats.csv", index=False)

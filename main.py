@@ -7,7 +7,7 @@
 
 import argparse
 from denoiser.train import train
-from denoiser.inference import test
+from denoiser.inference import test, extra
 
 import matplotlib
 
@@ -36,6 +36,8 @@ def main():
         train(vars(args))
     elif args.mode == "test":
         test(vars(args))
+    elif args.mode == "additional_validation":
+        extra(args.model_type)
 
 
 if __name__ == "__main__":

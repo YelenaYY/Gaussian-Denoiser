@@ -51,31 +51,32 @@ class BicubicDownThenUp:
 class RandomSigmaGaussianNoise:
     def __init__(self, noise: tuple[float, float] | float) -> None:
         if isinstance(noise, tuple):
-            sigma = random.uniform(noise[0], noise[1])
-            self.transform = v2.GaussianNoise(sigma=sigma)
+            self.sigma = random.uniform(noise[0], noise[1])
         else:
-            self.transform = v2.GaussianNoise(sigma=noise)
-        pass
+            self.sigma = noise
 
     def __call__(self, img: torch.Tensor):
+        self.transform = v2.GaussianNoise(sigma=self.sigma)
         return self.transform(img)
 
 
 # This is a transformation class that applies JPEG noise to an image with a random quality
 class FloatJPEG:
-    def __init__(self, quality: tuple[int, int]):
+    def __init__(self, quality: list[int]):
         self.quality = quality
 
     def __call__(self, img: torch.Tensor):
+        quality = random.choice(self.quality)
         return v2.Compose(
             [
                 v2.ToDtype(torch.uint8, scale=True),
-                v2.JPEG(self.quality),
+                v2.JPEG(quality),
                 v2.ToDtype(torch.float32, scale=True),
             ]
         )(img)
 
-DEFAULT_TRANSFORM = v2.RandomChoice(
+def DEFAULT_TRANSFORM():
+    return v2.RandomChoice(
     [
         v2.RandomRotation((-90, -90)),
         v2.RandomRotation((-180, -180)),
@@ -104,13 +105,16 @@ DEFAULT_TRANSFORM = v2.RandomChoice(
 
 # The following are the noise transforms for the three models
 
-MODEL_S_NOISE_TRANSFORM = RandomSigmaGaussianNoise(25.0 / 255.0)
+def MODEL_S_NOISE_TRANSFORM():
+    return RandomSigmaGaussianNoise(25.0 / 255.0)
 
-MODEL_B_NOISE_TRANSFORM = RandomSigmaGaussianNoise((0, 55.0 / 255.0))
+def MODEL_B_NOISE_TRANSFORM():
+    return RandomSigmaGaussianNoise((0, 55.0 / 255.0))
 
-MODEL_3_NOISE_TRANSFORM = v2.RandomChoice(
+def MODEL_3_NOISE_TRANSFORM():
+    return v2.RandomChoice(
     [
-        FloatJPEG((5, 99)),
+        FloatJPEG([10, 20, 30, 40]),
         BicubicDownThenUp([2, 3, 4]),
         RandomSigmaGaussianNoise((0, 55.0 / 255.0)),
     ]
@@ -126,7 +130,7 @@ class PatchDataset(Dataset):
         batch_size,
         num_patches_per_batch,
         transform=None,
-        noise_transform: Any = MODEL_B_NOISE_TRANSFORM,
+        noise_transform: Any = MODEL_B_NOISE_TRANSFORM(),
     ):
         self.image_paths = load_images(data_dir)
         print(f"Loading dataset with {len(self.image_paths)} images...")
@@ -179,12 +183,12 @@ class PatchDataset(Dataset):
         patch = image[:, i : i + self.patch_size, j : j + self.patch_size]
 
         if self.transform:
-            patch = self.transform(patch)
+            patch = self.transform()(patch)
 
         patch = patch.to(torch.float32) / 255.0
 
         if self.noise_transform:
-            noisy_patch = self.noise_transform(patch)
+            noisy_patch = self.noise_transform()(patch)
         else:
             noisy_patch = patch
 
